@@ -14,8 +14,7 @@ body {
 }
 
 .gallery-item {
-  width: 30%; /* Задаємо ширину елементів галереї, щоб вони розташовувалися по 3 в ряд */
-  margin: 10px;
+  width: 30%; 
   cursor: pointer;
 }
 
