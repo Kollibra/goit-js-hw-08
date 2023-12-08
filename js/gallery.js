@@ -1,4 +1,4 @@
-const gallery = document.querySelector('.gallery');
+// const gallery = document.querySelector('.gallery');
 
 const images = [
   {
@@ -67,9 +67,85 @@ const images = [
   
 ];
 
+// const galleryContainer = document.querySelector('.gallery');
+// let lightboxInstance = null;
+
+// images.forEach(image => {
+//   const galleryItem = document.createElement('li');
+//   galleryItem.classList.add('gallery-item');
+
+//   const galleryLink = document.createElement('a');
+//   galleryLink.classList.add('gallery-link');
+//   galleryLink.href = image.original;
+
+//   const galleryImage = document.createElement('img');
+//   galleryImage.classList.add('gallery-image');
+//   galleryImage.src = image.preview;
+//   galleryImage.setAttribute('data-source', image.original);
+//   galleryImage.alt = image.description;
+
+//   galleryLink.appendChild(galleryImage);
+//   galleryItem.appendChild(galleryLink);
+//   galleryContainer.appendChild(galleryItem);
+
+//   galleryLink.addEventListener('click', event => {
+//     event.preventDefault(); 
+
+//     lightboxInstance = basicLightbox.create(
+//       `<img src="${image.original}" alt="${image.description}" style="max-width: 100%; height: auto;">`
+//     );
+//     lightboxInstance.show();
+
+//     document.addEventListener('keydown', handleKeyPress);
+//   });
+// });
+
+// function handleKeyPress(event) {
+//   if (event.key === 'Escape') {
+//     lightboxInstance.close();
+//     document.removeEventListener('keydown', handleKeyPress);
+//   }
+// }
+
+
 const galleryContainer = document.querySelector('.gallery');
 let lightboxInstance = null;
 
+function initializeLightbox(image) {
+  lightboxInstance = basicLightbox.create(
+    `<img src="${image.original}" alt="${image.description}" style="max-width: 100%; height: auto;">`,
+    {
+      onShow: () => {
+        document.addEventListener('keydown', handleKeyPress);
+      },
+      onClose: () => {
+        document.removeEventListener('keydown', handleKeyPress);
+      },
+    }
+  );
+}
+
+function handleGalleryLinkClick(event) {
+  event.preventDefault();
+  const galleryLink = event.target.closest('.gallery-link');
+  if (galleryLink) {
+    const image = images.find(img => img.original === galleryLink.href);
+    if (image) {
+      initializeLightbox(image);
+      lightboxInstance.show();
+    }
+  }
+}
+
+function handleKeyPress(event) {
+  if (event.key === 'Escape') {
+    lightboxInstance.close();
+  }
+}
+
+galleryContainer.addEventListener('click', handleGalleryLinkClick);
+
+// Додавання зображень до галереї
 images.forEach(image => {
   const galleryItem = document.createElement('li');
   galleryItem.classList.add('gallery-item');
@@ -87,22 +163,4 @@ images.forEach(image => {
   galleryLink.appendChild(galleryImage);
   galleryItem.appendChild(galleryLink);
   galleryContainer.appendChild(galleryItem);
-
-  galleryLink.addEventListener('click', event => {
-    event.preventDefault(); 
-
-    lightboxInstance = basicLightbox.create(
-      `<img src="${image.original}" alt="${image.description}" style="max-width: 100%; height: auto;">`
-    );
-    lightboxInstance.show();
-
-    document.addEventListener('keydown', handleKeyPress);
-  });
 });
-
-function handleKeyPress(event) {
-  if (event.key === 'Escape') {
-    lightboxInstance.close();
-    document.removeEventListener('keydown', handleKeyPress);
-  }
-}
